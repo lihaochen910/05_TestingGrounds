@@ -85,6 +85,9 @@ protected:
 	/** Fires a projectile. */
 	void OnFire();
 
+	void OnFireStart();
+	void OnFireStop();
+
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
 
@@ -138,5 +141,12 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+		float FireRate = .1f;
+
+private:
+	FTimerHandle fireTimerHandle;
 };
 

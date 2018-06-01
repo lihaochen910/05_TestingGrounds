@@ -118,7 +118,8 @@ void AS05_TestingGroundsCharacter::SetupPlayerInputComponent(class UInputCompone
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AS05_TestingGroundsCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AS05_TestingGroundsCharacter::OnFireStart);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AS05_TestingGroundsCharacter::OnFireStop);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -140,6 +141,8 @@ void AS05_TestingGroundsCharacter::SetupPlayerInputComponent(class UInputCompone
 
 void AS05_TestingGroundsCharacter::OnFire()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, TEXT("OnFire!!"));
+
 	// try and fire a projectile
 	if (ProjectileClass != NULL)
 	{
@@ -184,6 +187,19 @@ void AS05_TestingGroundsCharacter::OnFire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+}
+
+
+void AS05_TestingGroundsCharacter::OnFireStart()
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Green, TEXT("OnFireStart"));
+	GetWorld()->GetTimerManager().SetTimer(fireTimerHandle, this, &AS05_TestingGroundsCharacter::OnFire, FireRate, true, 0);
+}
+
+void AS05_TestingGroundsCharacter::OnFireStop()
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Green, TEXT("OnFireStop"));
+	GetWorld()->GetTimerManager().ClearTimer(fireTimerHandle);
 }
 
 void AS05_TestingGroundsCharacter::OnResetVR()
